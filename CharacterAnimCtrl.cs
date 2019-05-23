@@ -44,7 +44,7 @@ public class CharacterAnimCtrl : MonoBehaviour
             // 待機中、一定時間経過したら
             if (WaitElaspedTime > WaitTime)
             {
-                randomMotion = Random.Range(1, 3);
+                int randomMotion = Random.Range(1, 3);
 
                 switch (randomMotion)
                 {
