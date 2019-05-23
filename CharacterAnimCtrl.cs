@@ -5,19 +5,21 @@ using UnityEngine;
 public class CharacterAnimCtrl : MonoBehaviour
 {
     private Animator anim;
-
     private Vector3 oldPos;
 
-    public AudioClip sound01;
-    public AudioClip sound02;
+    public float WaitTime;
+    public float ElaspedTime;    // 経過時間
+
+    public int randomMotion;
+
+    public AudioClip Sound01;
+    public AudioClip Sound02;
 
     public AudioSource audiosource;
 
-    public float WaitTime;
-    private float WaitElaspedTime;
-
     void Start()
     {
+        // 音量設定
         AudioSource[] audioSources = GetComponents<AudioSource>();
 
         audiosource = GetComponent<AudioSource>();
@@ -29,10 +31,16 @@ public class CharacterAnimCtrl : MonoBehaviour
 
     void Update()
     {
+        // タイマー作動
+        ElaspedTime += 1 * Time.deltaTime;
+
         // 前回位置と現在位置が異なるとき
         if (oldPos != transform.position)
         {
             // 歩行モーション
+            anim.SetBool("Sleep", false);
+            anim.SetBool("Play", false);
+
             anim.SetBool("Walk", true);
         }
         else
@@ -40,11 +48,11 @@ public class CharacterAnimCtrl : MonoBehaviour
             // 待機モーション
             anim.SetBool("Walk", false);
 
-
-            // 待機中、一定時間経過したら
-            if (WaitElaspedTime > WaitTime)
+            // タイマーが切れたら
+            if (ElaspedTime > WaitTime)
             {
-                int randomMotion = Random.Range(1, 3);
+                // ランダムで分岐
+                randomMotion = Random.Range(1, 3);
 
                 switch (randomMotion)
                 {
@@ -59,25 +67,24 @@ public class CharacterAnimCtrl : MonoBehaviour
                         break;
                 }
 
-                WaitElaspedTime = 0;
+                ElaspedTime = 0;
             }
-
-            // 前回位置の記録
-            oldPos = transform.position;
-
         }
+
+        // 前回位置の記録
+        oldPos = transform.position;
     }
 
     // AnimationEvent発生時に効果音再生
-    void Sound01()
+    void Event01()
     {
-        audiosource.clip = sound01;
+        audiosource.clip = Sound01;
         audiosource.Play();
     }
 
-    void Sound02()
+    void Event02()
     {
-        audiosource.clip = sound02;
+        audiosource.clip = Sound02;
         audiosource.Play();
     }
 }
